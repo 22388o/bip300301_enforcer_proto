@@ -1,0 +1,86 @@
+syntax = "proto3";
+package validator;
+
+service Validator {
+  rpc ConnectBlock(ConnectBlockRequest) returns (ConnectBlockResponse);
+  rpc DisconnectBlock(DisconnectBlockRequest) returns (DisconnectBlockResponse);
+  rpc GetCoinbasePSBT(GetCoinbasePSBTRequest) returns (GetCoinbasePSBTResponse);
+  rpc GetDeposits(GetDepositsRequest) returns (GetDepositsResponse);
+
+  rpc GetSidechainProposals(GetSidechainProposalsRequest)
+      returns (GetSidechainProposalsResponse);
+
+  rpc GetSidechains(GetSidechainsRequest) returns (GetSidechainsResponse);
+}
+
+message GetSidechainProposalsRequest {}
+message GetSidechainProposalsResponse {
+  repeated SidechainProposal sidechain_proposals = 1;
+}
+
+message SidechainProposal {
+  uint32 sidechain_number = 1;
+  bytes data = 2;
+  bytes data_hash = 3;
+  uint32 vote_count = 4;
+  uint32 proposal_height = 5;
+  uint32 proposal_age = 6;
+}
+
+message GetSidechainsRequest {}
+message GetSidechainsResponse { repeated Sidechain sidechains = 1; }
+
+message Sidechain {
+  uint32 sidechain_number = 1;
+  bytes data = 2;
+  uint32 vote_count = 3;
+  uint32 proposal_height = 4;
+  uint32 activation_height = 5;
+}
+
+message ConnectBlockRequest {
+  uint32 height = 1;
+  bytes block = 2;
+}
+message ConnectBlockResponse {}
+
+message DisconnectBlockRequest { bytes block = 1; }
+message DisconnectBlockResponse {}
+
+message GetCoinbasePSBTRequest {
+  repeated ProposeSidechain propose_sidechains = 1;
+  repeated AckSidechain ack_sidechains = 2;
+  repeated ProposeBundle propose_bundles = 3;
+  AckBundles ack_bundles = 4;
+};
+message GetCoinbasePSBTResponse { bytes psbt = 1; };
+
+message AckBundles {
+  AckBundlesEnum tag = 1;
+  repeated uint32 upvotes = 2;
+}
+
+enum AckBundlesEnum {
+  RepeatPrevious = 0;
+  LeadingBy50 = 1;
+  Upvotes = 2;
+}
+
+message AckSidechain {
+  uint32 sidechain_number = 1;
+  bytes data_hash = 2;
+}
+
+message ProposeSidechain {
+  uint32 sidechain_number = 1;
+  bytes data = 2;
+}
+
+message ProposeBundle {
+  uint32 sidechain_number = 1;
+  bytes bundle_txid = 2;
+}
+
+message GetDepositsRequest {}
+
+message GetDepositsResponse {}
