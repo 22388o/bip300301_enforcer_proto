@@ -11,6 +11,8 @@ service Validator {
       returns (GetSidechainProposalsResponse);
 
   rpc GetSidechains(GetSidechainsRequest) returns (GetSidechainsResponse);
+
+  rpc GetCtip(GetCtipRequest) returns (GetCtipResponse);
 }
 
 message GetSidechainProposalsRequest {}
@@ -84,3 +86,11 @@ message ProposeBundle {
 message GetDepositsRequest {}
 
 message GetDepositsResponse {}
+
+message GetCtipRequest { uint32 sidechain_number = 1; }
+
+message GetCtipResponse {
+  bytes txid = 1;
+  uint32 vout = 2;
+  uint64 value = 3;
+}

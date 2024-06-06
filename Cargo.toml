@@ -1,5 +1,5 @@
 [package]
-name = "enforcer_proto"
+name = "bip300301_enforcer_proto"
 version = "0.1.0"
 edition = "2021"
 
